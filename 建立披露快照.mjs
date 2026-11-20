@@ -1,5 +1,6 @@
 import{URLS,parseCoverage,parseCommon,parseActivity,parseHolders,parseRanking,parseProfile}from'./解析公開持倉.mjs';
-export async function buildSnapshot(read,at=null){
+import{annualSummary}from'./官方持倉摘要.mjs';
+export async function buildSnapshot(read,at=null,annual=null){
  const coverage=parseCoverage(await read('投資人首頁',URLS.home));
  const common=parseCommon(await read('共同持倉',URLS.common));
  const buying=parseCommon(await read('季度買入按人數',URLS.buys)).map(({holders,...r})=>({...r,reported_buyers:holders}));
@@ -31,6 +32,7 @@ export async function buildSnapshot(read,at=null){
   {id:'TRUMP',name:'特朗普 Donald Trump',source_url:URLS.trump,file:'特朗普',trump:true}]){
   pins.push(parseProfile(await read(who.file,who.source_url),who));
  }
+ for(const p of [...ranked,...pins])p.position_allocation=annualSummary(annual,p.id);
  return {version:'celebrity-disclosures-v1',updated_at:at||new Date().toISOString(),status:'complete',
   common:{...coverage,rows:common,buying_rows:buying,ranking_basis:'number_of_distinct_reporting_portfolios',positions_basis:'latest_disclosed_per_manager',source_url:URLS.common,buying_source_url:URLS.buys},
   people:{rows:ranked,pinned:pins,coverage:directory.coverage,rated_cohort:directory.rated_cohort,minimum_priced_buys:20,comparable_count:cohort.length,

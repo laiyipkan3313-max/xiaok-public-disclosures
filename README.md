@@ -8,4 +8,8 @@
 
 資料更新使用標準 Linux GitHub Actions，沒有付費 AI、外部付費 API、快取或建置成品儲存。來源不能完整核對時，保留上次成功的完整摘要。
 
+年度股票持倉只從美國眾議院官方年度原申報讀取 ST 股票類別，保留報告年度、年末日期、公布日期、原表連結及股票金額範圍。只有全部個別股票均有有限上下界、亦沒有未核對修訂時，網站才用金額區間中點估算股票內部比例；不是目前倉位或全資產配置。個別代管股票未列金額、區間無上限或修訂尚未核對時，不畫比例圖。
+
+年度解析的暫存 PDF 不會提交至本資料庫，只保留公開股票摘要，沒有物業、地址、會員或其他私人資料。
+
 參考來源：[DATAROMA](https://www.dataroma.com/m/g/portfolio.php?o=c&pct=0)、[Quantellect](https://quantellect.ai/us/congress/politicians)、[SEC 13F 說明](https://www.sec.gov/rules-regulations/staff-guidance/frequently-asked-questions-about-form-13f)。

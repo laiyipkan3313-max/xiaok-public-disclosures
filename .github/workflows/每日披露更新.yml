@@ -11,18 +11,21 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: true
       - name: 讀取並核對公開來源
-        run: node 更新公開申報.mjs
+        run: |
+          python3 -m pip install --disable-pip-version-check pdfplumber==0.11.9
+          python3 官方年度持倉.py
+          node 更新公開申報.mjs
       - name: 發布完整摘要
         run: |
           git config user.name '公開申報資料更新'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add 最新披露.json
+          git add 最新披露.json 人物年度持倉.json
           if ! git diff --cached --quiet; then
             git commit -m '更新完整公開申報摘要'
             git push
