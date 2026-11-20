@@ -75,7 +75,13 @@ export function parseRanking(html){
    source_url:'https://quantellect.ai/us/congress/politicians/'+slug(r.politicianName)+'/'+r.id}));
  return {coverage:rows.length,rated_cohort:rated,minimum_priced_buys:20,eligible:eligible.length,scope:'public_directory_sample',window:'24mo',rows:candidates.slice(0,10),candidates,source_url:URLS.directory};
 }
-function isoDate(s){if(/^\d{4}-\d{2}-\d{2}$/.test(s||''))return s;const n=Date.parse(s||'');return Number.isFinite(n)?new Date(n).toISOString().slice(0,10):null}
+function isoDate(s){
+ if(/^\d{4}-\d{2}-\d{2}$/.test(s||''))return s;
+ const m=String(s||'').trim().match(/^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})$/),months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+ if(!m)return null;const month=months.indexOf(m[2].toUpperCase());if(month<0)return null;
+ const d=new Date(Date.UTC(Number(m[3]),month,Number(m[1])));if(d.getUTCMonth()!==month||d.getUTCDate()!==Number(m[1]))return null;
+ return d.toISOString().slice(0,10);
+}
 export function parseProfile(html,{id,name,source_url,trump=false}){
  const objects=rscObjects(html),profits=objects.find(r=>r.windows?.['24mo']?.basis==='estimated_unrealized_profit')?.windows['24mo'];
  if(!profits||profits.winRate!==null&&(!Number.isFinite(profits.winRate)||profits.winRate<0||profits.winRate>1)||!Number.isSafeInteger(profits.pricedBuys)||profits.wins>profits.pricedBuys||profits.pricedBuys>profits.totalBuys)throw Error('PROFILE_STATISTICS_INVALID');
